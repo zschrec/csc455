@@ -28,6 +28,10 @@ public class GridCell {
         return west;
     }
 
+    public int getWeight() {
+        return weight;
+    }
+
     public void setNorth(GridCell north) {
         this.north = north;
     }
