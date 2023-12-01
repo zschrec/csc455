@@ -2,7 +2,7 @@ package com.mygdx.game;
 
 public class GridCell {
 
-    private int weight;
+    private final int weight;
     private GridCell north;
     private GridCell south;
     private GridCell east;
