@@ -17,18 +17,19 @@ public class Asteroid {
 
     private float rotation;
 
+    private boolean isActive = true;
     private AsteroidType type;
 
     public Asteroid(SpriteBatch batch, float asteroidForwardSpeed, float asteroidAngularSpeed, float screenWidth,
-                    float screanHeight, AsteroidType type) {
+                    float screenHeight, AsteroidType type) {
         this.batch = batch;
         this.asteroidForwardSpeed = asteroidForwardSpeed;
         this.asteroidAngularSpeed = asteroidAngularSpeed;
-        this.screenHeight = screanHeight;
+        this.screenHeight = screenHeight;
         this.screenWidth = screenWidth;
         this.type = type;
         this.rotation = MathUtils.random(0, MathUtils.PI2);
-        position = new Vector2(MathUtils.random(0, screenWidth), MathUtils.random(0, screanHeight));
+        position = new Vector2(MathUtils.random(0, screenWidth), MathUtils.random(0, screenHeight));
 
     }
 
@@ -69,4 +70,15 @@ public class Asteroid {
         return new Vector2(MathUtils.cos(rotation), MathUtils.sin(rotation));
     }
 
+    public Vector2 getPosition() {
+        return position;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void destroyed() {
+        isActive = false;
+    }
 }

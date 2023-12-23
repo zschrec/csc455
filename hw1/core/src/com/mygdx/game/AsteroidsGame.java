@@ -16,7 +16,14 @@ public class AsteroidsGame extends ApplicationAdapter {
 	private final float minAsteroidSpeed = 150f;
 	private final float maxAsteroidSpeed = 150f;
 	private final float maxShipSpeed = 200f;
-	private final float maxShipRotationSpeed = 100f;
+	private final float maxShipRotationSpeed = 200f;
+
+	private boolean gameOver = false;
+	private boolean won = false;
+
+	private float gameOverTime = 0;
+
+	private float startInvincibility = 2;
 
 	private SpriteBatch batch;
 	@Override
@@ -25,7 +32,7 @@ public class AsteroidsGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 
 		ship = new Ship(batch, new Vector2(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2), maxShipSpeed,
-				maxShipRotationSpeed);
+				maxShipRotationSpeed, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), asteroids);
 
 		for (int i = 0; i < maxAsteroids; ++i) {
 			asteroids.add(new Asteroid(batch, MathUtils.random(minAsteroidSpeed, maxAsteroidSpeed), 0, Gdx.graphics.getWidth(),
@@ -41,12 +48,38 @@ public class AsteroidsGame extends ApplicationAdapter {
 		float delta = Gdx.graphics.getDeltaTime();
 
 		for (Asteroid asteroid : asteroids) {
-			asteroid.update(delta);
+			if (asteroid.isActive()) {
+				asteroid.update(delta);
+			} else {
+				asteroids.removeValue(asteroid, true);
+			}
+		}
+		if (asteroids.size == 0 && !won) {
+			System.out.println("You Win!");
+			won = true;
 		}
 		ship.update(delta);
 
+		if (startInvincibility > 0) {
+			startInvincibility -= delta;
+		} else {
+			if (ship.asteroidCollision() && !gameOver) {
+				System.out.println("Game over");
+				gameOver = true;
+			}
+		}
+
+		if (gameOver || won) {
+			gameOverTime += delta;
+			if (gameOverTime > 3) {
+				Gdx.app.exit();
+			}
+		}
+
 		batch.begin();
-		ship.render();
+		if (!gameOver) {
+			ship.render();
+		}
 		for (Asteroid asteroid : asteroids) {
 			asteroid.render();
 		}
